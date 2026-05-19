@@ -1,0 +1,50 @@
+---
+title: "Atividade 6"
+lang: pt-BR
+author: "Marden José Guimarães Faria"
+date: today
+date-format: "07/05/2026"
+format:
+  typst:
+    papersize: a4
+    number-sections: true
+    toc: false
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    linkcolor: "blue"
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Lista de Exercícios
+
+# Exercício 01
+
+# Uma aplicação financeira pode gerar, em um mês, um dos seguintes retornos líquidos: 6%, 2%, -1%, ou -4%. As probabilidades desses resultados são, respectivamente, 0, 15, 0, 45, 0, 25 e 0,15.
+
+
+
+## \# Simule pelo menos 10.000 meses independentes desse processo e estime: o valor esperado do retorno mensal; a variância e o desvio-padrão; a probabilidade de retorno negativo.
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
