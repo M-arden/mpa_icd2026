@@ -118,3 +118,4 @@ cat("Valor de Referência (integrate):", valor_ref_b, "\n")
 cat("Erro Absoluto:", erro_abs_b, "\n")
 
 # Fim ----------------------------------------------------------------
+
