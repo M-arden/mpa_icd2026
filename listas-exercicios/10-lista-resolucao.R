@@ -99,7 +99,7 @@ print(valor_p)
 
 # Exercício 3 ------------------------------------------------
 
-# Ajustar o modelo linear conforme a página 89
+# Ajustar o modelo linear
 modelo_ab <- lm(tempo_min ~ versao, data = dados_ab)
 
 # Exibir os coeficientes e erros-padrão
