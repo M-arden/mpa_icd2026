@@ -1,0 +1,135 @@
+---
+lang: pt-BR
+title: "Resolução Avaliação 3"
+subtitle: "Introdução à Ciência de Dados - 2026/1 <br> Mestrado Profissional em Administração"
+author: "Marden José Guimarães Faria"
+date: 2026-06-25
+date-format: long
+title-block-banner: "#27445C"
+format:
+  html:
+    embed-resources: true
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: source
+---
+
+
+```{r}
+#| label: setup
+#| echo: true
+
+# configura a exibição de números
+options(digits = 3, scipen = 99)
+
+# Carrega os pacotes necessários
+library(here) # para usar caminhos relativos de arquivos
+library(tidyverse)  # Inclui readr, dplyr, tidyr, ggplot2, etc.
+```
+
+
+
+# Questão 1 
+
+
+**a)** 
+
+```{r}
+# caminhos relativos dos arquivos CSV
+instituicoes_financeiras_csv <- here("data/raw/instituicoes_financeiras.csv")
+indicadores_contabeis_csv <- here("data/raw/indicadores_contabeis.csv")
+carteira_credito_csv <- here("data/raw/carteira_credito.csv")
+
+# importacao dos arquivos CSV
+instituicoes_financeiras <- read_csv(instituicoes_financeiras_csv)
+indicadores_contabeis <- read_csv(indicadores_contabeis_csv)
+carteira_credito <- read_csv(carteira_credito_csv)
+
+# pipeline para combinar as 3 tabelas
+dados_financeiros <- indicadores_contabeis |>
+  # primeiro join: adiciona a carteira de credito
+  left_join(carteira_credito, by = c("id_instituicao", "ano")) |>
+  # segundo join: adiciona o cadastro das instituicoes
+  left_join(instituicoes_financeiras, by = "id_instituicao")
+
+# verifica a estrutura dos dados combinados
+glimpse(dados_financeiros)
+
+# exibe as 10 primeiras linhas
+head(dados_financeiros, 10)
+```
+
+
+
+
+**b)** 
+
+```{r}
+# resumo por instituicao
+resumo_instituicoes <- dados_financeiros |>
+  # cria o indicador de rentabilidade
+  mutate(roa = resultado_liquido / ativo_total) |>
+  # agrupa pelo codigo e pelo nome da instituicao
+  group_by(id_instituicao, nome_instituicao) |>
+  # calcula as médias agrupadas do periodo 
+  summarise(
+    media_ativo_total = mean(ativo_total, na.rm = TRUE),
+    media_carteira_credito = mean(carteira_credito, na.rm = TRUE),
+    media_inadimplencia = mean(inadimplencia, na.rm = TRUE),
+    roa_medio = mean(roa, na.rm = TRUE)
+  ) |>
+  # seleciona as variaveis finais
+  select(id_instituicao, nome_instituicao, media_ativo_total, 
+         media_carteira_credito, media_inadimplencia, roa_medio)
+
+# verifica a estrutura do resumo
+glimpse(resumo_instituicoes)
+
+# exibe as 10 primeiras linhas
+head(resumo_instituicoes, 10)
+```
+
+
+
+
+
+# Questão 2 
+
+
+**a.** 
+
+Guido Imbens (2021) afirma que, frequentemente , os valores-p e a significância
+estatística não respondem à pergunta de interesse. Em muitos casos os 
+pesquisadores estão interessados em uma estimativa focada em determinar o 
+tamanho do efeito e a incerteza associada a um parâmetro de interesse, servindo 
+de base para decidir ou recomendar a implantação da tomada de descisão de 
+implantação de uma nova política.
+
+Nas pesquisas aplicadas, os pesquisadores desviam o foco pois raramente
+há razões para acreditar que um efeito seja exatamente igual a zero. È falho a
+comunicação do real impacto econômico e a incerteza da estimativa, onde tratam
+de maneira errada os resultados não significativos.
+
+
+**b.** 
+
+
+Com base nos argumentos de Guido Imbens (2021), são recomendações 
+práticas para relatar os resultados empíricos:
+
+1) Apresentação de estimativas e incertezas: enfatizar as estimativas 
+pontuais e os erros padrões, juntamente com os intervalos de confiança, fazendo
+com que as "estrelas" sejam eliminadas nas tabelas de resultados.
+
+2) Uso de p-valor uso de valores-p para comunicar evidência contra uma hipótese 
+nula quando o problema for de fato um teste de hipótese, sem reduzir a análise 
+a uma regra binária de significativo/não significativo: os valores-p exatos
+devem ser reportados de forma contínua como força da evidência contra a 
+hipótese nula.
+
+3) Redução de incentivos ao p-hacking ou ao viés de publicação: no caso da
+dessa redução de incetivos, o ideal seria a utilização do uso de plano de pré-
+análise e a submissão de registros de experimentos sempre que viável.
